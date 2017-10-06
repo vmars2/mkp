@@ -1,22 +1,34 @@
-package com.shravya.mkp;
+package com.shravya.mkp.entities;
 
+import com.yahoo.elide.annotation.Include;
+import com.yahoo.elide.annotation.SharePermission;
+
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.util.Date;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Collection;
 
 /**
  * Created by syakkali on 05/10/17.
  */
+@Entity
+@Table(name = "project")
+@SharePermission(expression = "Prefab.Role.All")
+@Include(rootLevel = true)
 public class Project {
 
     private long id;
+    private String name;
     private String description;
-    private Date deadline;
+    private Long deadline; // Time is in epoch
     private String tags;
-    private Status status;
-    private Buyer buyer;
+    private Status status = Status.OPEN;
+    private Seller seller;
+    private Collection<Bid> bids;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +40,14 @@ public class Project {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -36,11 +56,11 @@ public class Project {
         this.description = description;
     }
 
-    public Date getDeadline() {
+    public Long getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(Long deadline) {
         this.deadline = deadline;
     }
 
@@ -61,12 +81,21 @@ public class Project {
     }
 
     @ManyToOne
-    public Buyer getBuyer() {
-        return buyer;
+    public Seller getSeller() {
+        return seller;
     }
 
-    public void setBuyer(Buyer buyer) {
-        this.buyer = buyer;
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    @OneToMany(mappedBy = "project")
+    public Collection<Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(Collection<Bid> bids) {
+        this.bids = bids;
     }
 
     private enum Status {

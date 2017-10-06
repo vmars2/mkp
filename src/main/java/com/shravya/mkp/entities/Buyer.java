@@ -1,4 +1,4 @@
-package com.shravya.mkp;
+package com.shravya.mkp.entities;
 
 import com.yahoo.elide.annotation.Include;
 
@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Table(name = "seller")
+@Table(name = "buyer")
 @Include(rootLevel = true)
-public class Seller {
+public class Buyer {
 
     private long id;
     private String name;
@@ -56,7 +56,7 @@ public class Seller {
         this.description = description;
     }
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "buyer")
     public Collection<Bid> getBids() {
         return bids;
     }

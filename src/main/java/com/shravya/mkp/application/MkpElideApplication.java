@@ -1,9 +1,9 @@
 package com.shravya.mkp.application;
 
-import com.shravya.mkp.Bid;
-import com.shravya.mkp.Buyer;
-import com.shravya.mkp.Project;
-import com.shravya.mkp.Seller;
+import com.shravya.mkp.entities.Bid;
+import com.shravya.mkp.entities.Buyer;
+import com.shravya.mkp.entities.Seller;
+import com.shravya.mkp.entities.Project;
 import com.yahoo.elide.contrib.dropwizard.elide.ElideBundle;
 import com.yahoo.elide.resources.JsonApiEndpoint;
 import io.dropwizard.Application;
@@ -20,9 +20,9 @@ public class MkpElideApplication extends Application<MkpElideConfiguration> {
     public MkpElideApplication() {
         this.elideBundle = new ElideBundle<MkpElideConfiguration>(
                 Bid.class,
-                Buyer.class,
+                Seller.class,
                 Project.class,
-                Seller.class
+                Buyer.class
         ) {
             @Override
             public DataSourceFactory getDataSourceFactory(MkpElideConfiguration configuration) {
