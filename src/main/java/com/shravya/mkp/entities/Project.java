@@ -1,6 +1,8 @@
 package com.shravya.mkp.entities;
 
 import com.yahoo.elide.annotation.Include;
+import com.yahoo.elide.annotation.OnCreatePreCommit;
+import com.yahoo.elide.annotation.OnUpdatePreCommit;
 import com.yahoo.elide.annotation.SharePermission;
 
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.Instant;
 import java.util.Collection;
 
 /**
@@ -24,6 +27,7 @@ public class Project {
     private long id;
     private String name;
     private String description;
+//    @UpdatePermission(expression="PREFAB.Roll.None") //Once set, the deadline cannot be changed.
     private Long deadline; // Time is in epoch
     private String tags;
     private Status status = Status.OPEN;
@@ -96,6 +100,23 @@ public class Project {
 
     public void setBids(Collection<Bid> bids) {
         this.bids = bids;
+    }
+
+    @OnUpdatePreCommit("deadline")
+    public void onUpdateDeadline() {
+        validateDeadline();
+    }
+
+    @OnCreatePreCommit
+    public void onCreate() {
+        validateDeadline();
+    }
+
+    private void validateDeadline() {
+        long now = Instant.now().getEpochSecond();
+        if (this.deadline <= now) {
+            throw new IllegalArgumentException("deadline cannot be in the past");
+        }
     }
 
     private enum Status {

@@ -182,7 +182,7 @@ curl -H'Content-Type: application/vnd.api+json; ext=jsonpatch' \
                  "id": 2,
                  "attributes": {
                      "hourlyQuote" : 10,
-                     "duration" : 10
+                     "noOfHrs" : 10
                  },
                  "relationships": {
                      "project": {
@@ -255,7 +255,7 @@ curl -H'Content-Type: application/vnd.api+json; ext=jsonpatch' \
                  "id": 4,
                  "attributes": {
                      "hourlyQuote" : 10,
-                     "duration" : 10
+                     "noOfHrs" : 10
                  },
                  "relationships": {
                      "project": {

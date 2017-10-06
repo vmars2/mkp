@@ -1,7 +1,10 @@
 package com.shravya.mkp.entities;
 
 import com.yahoo.elide.annotation.Include;
+import com.yahoo.elide.annotation.OnCreatePreSecurity;
+import com.yahoo.elide.annotation.OnUpdatePreSecurity;
 import com.yahoo.elide.annotation.SharePermission;
+import io.dropwizard.validation.ValidationMethod;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 @Entity
@@ -20,7 +24,7 @@ public class Bid {
     private long id;
     private BigDecimal totalQuote;  // The totalQuote is in USD
     private BigDecimal hourlyQuote; // the hourlyQuote is in USD
-    private int duration;           // duration is in hrs
+    private int noOfHrs;           // noOfHrs is in hrs
     private Status status = Status.OPEN;
     private Project project;
     private Buyer buyer;
@@ -51,12 +55,12 @@ public class Bid {
         this.hourlyQuote = hourlyQuote;
     }
 
-    public int getDuration() {
-        return duration;
+    public int getNoOfHrs() {
+        return noOfHrs;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setNoOfHrs(int noOfHrs) {
+        this.noOfHrs = noOfHrs;
     }
 
     public Status getStatus() {
@@ -83,6 +87,28 @@ public class Bid {
 
     public void setBuyer(Buyer buyer) {
         this.buyer = buyer;
+    }
+
+    @ValidationMethod(message="The quote setting is not valid")
+    @Transient
+    public boolean isQuoteValid() {
+        return (totalQuote != null || (hourlyQuote != null && noOfHrs > 0));
+    }
+
+    @OnCreatePreSecurity
+    public void onCreatePreSecurity() {
+        updateFinalTotalQuote();
+    }
+
+    @OnUpdatePreSecurity
+    public void onUpdatePreCommit() {
+        updateFinalTotalQuote();
+    }
+
+    public void updateFinalTotalQuote() {
+        if(this.hourlyQuote != null) {
+            this.totalQuote =  hourlyQuote.multiply(new BigDecimal(noOfHrs));
+        }
     }
 
     public enum Status {
