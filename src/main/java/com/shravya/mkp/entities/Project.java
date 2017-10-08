@@ -108,12 +108,9 @@ public class Project {
 
     @ComputedAttribute
     @Transient
-    public Long getBestBid() {
-        Bid best = evaluateBestBid();
-        if(best != null) {
-            return best.getId();
-        }
-        return null;
+    @OneToOne
+    public Bid getBestBid() {
+        return evaluateBestBid();
     }
 
     public void setBestBid(Long bestBid) {}
