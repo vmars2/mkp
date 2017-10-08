@@ -1,11 +1,9 @@
 package com.shravya.mkp.entities;
 
-import com.yahoo.elide.annotation.ComputedAttribute;
 import com.yahoo.elide.annotation.Include;
 import com.yahoo.elide.annotation.OnCreatePreSecurity;
 import com.yahoo.elide.annotation.OnUpdatePreSecurity;
 import com.yahoo.elide.annotation.SharePermission;
-import com.yahoo.elide.annotation.UpdatePermission;
 import io.dropwizard.validation.ValidationMethod;
 
 import javax.persistence.Entity;

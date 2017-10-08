@@ -6,7 +6,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.context.internal.ManagedSessionContext;
 import org.hibernate.criterion.Restrictions;
 
 import javax.ws.rs.GET;
@@ -45,42 +44,102 @@ public class HelloWorldResource {
         return projectIds;
     }
 
-    @Path("/sessionFactory")
+    @Path("/getProjectsInDeadlineRange")
     @GET
     @Timed
-    public Collection<Long> getProjectsSessionFactory(@QueryParam("lower") long lower
+    public Collection<Long> getProjectsInDeadlineRange(@QueryParam("lower") long lower
             , @QueryParam("higher") long higher) {
-
-        List<Long> projectIds = new ArrayList<>();
 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
+        List<Long> projectIds = new ArrayList<>();
         try {
-//            long lower = 1508320000;
-//            long higher = 1508320613;
-
-            Criteria criteria = session.createCriteria(Project.class);
-            criteria.add(Restrictions.ge("deadline", lower));
-            criteria.add(Restrictions.le("deadline", higher));
-
-            List<Project> list = criteria.list();
-
-            for(Project project: list) {
+            List<Project> projects = getProjectsInDeadlineRange2(lower, higher, session);
+            for (Project project : projects) {
                 projectIds.add(project.getId());
-                StringBuilder builder = new StringBuilder();
-                builder.append("Bids for project: " + project.getId() + "\n");
-                for(Bid bid: project.getBids()) {
-                    builder.append(bid.getId() + "\n");
-                }
-                System.out.println(builder.toString());
             }
-
         } finally {
             transaction.commit();
             session.close();
         }
-
         return projectIds;
+    }
+
+    @Path("/closeProjectsInDeadlineRange")
+    @GET
+    @Timed
+    public Collection<Long> closeProjectsInDeadlineRange(@QueryParam("lower") long lower
+            , @QueryParam("higher") long higher) {
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        List<Long> projectIds = new ArrayList<>();
+
+        try {
+            List<Project> projects = getProjectsInDeadlineRange2(lower, higher, session);
+            evaluateProjects(projects, session);
+
+            for (Project project : projects) {
+                projectIds.add(project.getId());
+            }
+        } finally {
+            transaction.commit();
+            session.close();
+        }
+        return projectIds;
+    }
+
+    private void acceptBid(Bid bid, Session session) {
+        if(bid != null) {
+            Query q = session.createQuery("update Bid set status=1 where id=:i");
+            q.setParameter("i", bid.getId());
+
+            int status = q.executeUpdate();
+            System.out.println(status);
+        }
+    }
+
+    private void rejectBid(Bid bid, Session session) {
+        if(bid != null) {
+            Query q = session.createQuery("update Bid set status=2 where id=:i");
+            q.setParameter("i", bid.getId());
+
+            int status = q.executeUpdate();
+            System.out.println(status);
+        }
+    }
+
+    private void closeProject(Project project, Session session) {
+        Query q = session.createQuery("update Project set status=1 where id=:i");
+        q.setParameter("i", project.getId());
+
+        int status = q.executeUpdate();
+        System.out.println(status);
+    }
+
+    private void evaluateProjects(List<Project> projects, Session session) {
+        for (Project project : projects) {
+            if (project.getBids() != null) {
+                for (Bid bid : project.getBids()) {
+                    rejectBid(bid, session);
+                }
+                acceptBid(project.getBestBid(), session);
+                closeProject(project, session);
+            }
+        }
+    }
+
+    private List<Project> getProjectsInDeadlineRange2(long lower, long higher, Session session) {
+
+        List<Project> projects;
+//            long lower = 1508320000;
+//            long higher = 1508320613;
+        Criteria criteria = session.createCriteria(Project.class);
+        criteria.add(Restrictions.ge("deadline", lower));
+        criteria.add(Restrictions.le("deadline", higher));
+        projects = criteria.list();
+
+        return projects;
     }
 
 
