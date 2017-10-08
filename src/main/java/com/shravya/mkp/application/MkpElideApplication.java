@@ -9,8 +9,10 @@ import com.yahoo.elide.contrib.dropwizard.elide.ElideBundle;
 import com.yahoo.elide.resources.JsonApiEndpoint;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.hibernate.SessionFactory;
 
 public class MkpElideApplication extends Application<MkpElideConfiguration> {
 
@@ -39,8 +41,15 @@ public class MkpElideApplication extends Application<MkpElideConfiguration> {
 
     @Override
     public void run(MkpElideConfiguration config, Environment environment) {
-        environment.jersey().register(HelloWorldResource.class);
+
         environment.jersey().register(JsonApiEndpoint.class);
+
+        final PooledDataSourceFactory dbConfig = config.getDataSourceFactory();
+        SessionFactory sessionFactory = elideBundle.getSessionFactoryFactory().build(elideBundle, environment
+                , dbConfig, elideBundle.getEntities());
+
+        environment.jersey().register(new HelloWorldResource(sessionFactory));
+
     }
 
     public static void main(String[] args) throws Exception {

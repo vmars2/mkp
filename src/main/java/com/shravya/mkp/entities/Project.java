@@ -31,7 +31,7 @@ public class Project {
     private long id;
     private String name;
     private String description;
-    private Long deadline; // Time is in epoch
+    private long deadline; // Time is in epoch
     private String tags;
     private Status status = Status.OPEN;
     private Seller seller;
