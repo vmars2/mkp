@@ -1,9 +1,11 @@
 package com.shravya.mkp.entities;
 
+import com.yahoo.elide.annotation.ComputedAttribute;
 import com.yahoo.elide.annotation.Include;
 import com.yahoo.elide.annotation.OnCreatePreSecurity;
 import com.yahoo.elide.annotation.OnUpdatePreSecurity;
 import com.yahoo.elide.annotation.SharePermission;
+import com.yahoo.elide.annotation.UpdatePermission;
 import io.dropwizard.validation.ValidationMethod;
 
 import javax.persistence.Entity;
@@ -14,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Entity
 @Table(name = "bid")
@@ -22,12 +25,25 @@ import java.math.BigDecimal;
 public class Bid {
 
     private long id;
+    //@UpdatePermission(expression = "Prefab.Role.None")
     private BigDecimal totalQuote;  // The totalQuote is in USD
+    //@UpdatePermission(expression = "Prefab.Role.None")
     private BigDecimal hourlyQuote; // the hourlyQuote is in USD
+    //@UpdatePermission(expression = "Prefab.Role.None")
     private int noOfHrs;           // noOfHrs is in hrs
     private Status status = Status.OPEN;
     private Project project;
     private Buyer buyer;
+    private long dateOfCreation;
+
+    @GeneratedValue
+    public long getDateOfCreation() {
+        return dateOfCreation;
+    }
+
+    public void setDateOfCreation(long dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,6 +114,7 @@ public class Bid {
     @OnCreatePreSecurity
     public void onCreatePreSecurity() {
         updateFinalTotalQuote();
+        dateOfCreation = Instant.now().getEpochSecond();
     }
 
     @OnUpdatePreSecurity

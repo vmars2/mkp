@@ -1,5 +1,6 @@
 package com.shravya.mkp.entities;
 
+import com.yahoo.elide.annotation.ComputedAttribute;
 import com.yahoo.elide.annotation.Include;
 import com.yahoo.elide.annotation.OnCreatePreCommit;
 import com.yahoo.elide.annotation.OnUpdatePreCommit;
@@ -11,7 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collection;
 
@@ -102,14 +106,42 @@ public class Project {
         this.bids = bids;
     }
 
-    @OnUpdatePreCommit("deadline")
-    public void onUpdateDeadline() {
+    @ComputedAttribute
+    @Transient
+    public Long getBestBid() {
+        Bid best = evaluateBestBid();
+        if(best != null) {
+            return best.getId();
+        }
+        return null;
+    }
+
+    public void setBestBid(Long bestBid) {}
+
+    @OnUpdatePreCommit
+    public void OnUpdatePreCommit() {
         validateDeadline();
     }
 
     @OnCreatePreCommit
-    public void onCreate() {
+    public void onCreatePreCommit() {
         validateDeadline();
+    }
+
+    private Bid evaluateBestBid() {
+        Bid bestBid = null;
+        BigDecimal min = BigDecimal.valueOf(Integer.MAX_VALUE);
+        for(Bid bid: getBids()) {
+            if(bid.getTotalQuote().compareTo(min) < 0) {
+                min = bid.getTotalQuote();
+                bestBid = bid;
+            } else if (bid.getTotalQuote().equals(min)){
+                if(bid.getDateOfCreation() < bestBid.getDateOfCreation()) {
+                    bestBid = bid;
+                }
+            }
+        }
+        return bestBid;
     }
 
     private void validateDeadline() {
