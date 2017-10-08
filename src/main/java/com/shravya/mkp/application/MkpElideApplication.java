@@ -2,6 +2,7 @@ package com.shravya.mkp.application;
 
 import com.shravya.mkp.entities.Bid;
 import com.shravya.mkp.entities.Buyer;
+import com.shravya.mkp.entities.HelloWorldResource;
 import com.shravya.mkp.entities.Seller;
 import com.shravya.mkp.entities.Project;
 import com.yahoo.elide.contrib.dropwizard.elide.ElideBundle;
@@ -38,6 +39,7 @@ public class MkpElideApplication extends Application<MkpElideConfiguration> {
 
     @Override
     public void run(MkpElideConfiguration config, Environment environment) {
+        environment.jersey().register(HelloWorldResource.class);
         environment.jersey().register(JsonApiEndpoint.class);
     }
 

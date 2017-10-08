@@ -31,7 +31,6 @@ public class Project {
     private long id;
     private String name;
     private String description;
-//    @UpdatePermission(expression="PREFAB.Roll.None") //Once set, the deadline cannot be changed.
     private Long deadline; // Time is in epoch
     private String tags;
     private Status status = Status.OPEN;
