@@ -42,7 +42,7 @@ curl -H'Content-Type: application/vnd.api+json; ext=jsonpatch' \
                 "attributes": {
                     "name": "project 1",
                     "description": "project 1 descr",
-                    "deadline" : 1508320613
+                    "deadline" : 1507570707
                 }
             }
         },

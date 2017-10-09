@@ -34,15 +34,6 @@ public class Bid {
     private Buyer buyer;
     private long dateOfCreation;
 
-    @GeneratedValue
-    public long getDateOfCreation() {
-        return dateOfCreation;
-    }
-
-    public void setDateOfCreation(long dateOfCreation) {
-        this.dateOfCreation = dateOfCreation;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
@@ -101,6 +92,15 @@ public class Bid {
 
     public void setBuyer(Buyer buyer) {
         this.buyer = buyer;
+    }
+
+    @GeneratedValue
+    public long getDateOfCreation() {
+        return dateOfCreation;
+    }
+
+    public void setDateOfCreation(long dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
     }
 
     @ValidationMethod(message="The quote setting is not valid")

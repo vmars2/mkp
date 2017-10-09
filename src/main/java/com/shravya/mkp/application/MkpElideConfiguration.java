@@ -15,6 +15,10 @@ public class MkpElideConfiguration extends Configuration {
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
 
+    @Valid
+    @NotNull
+    private int deadlineThreshold;  //In minutes
+
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
         return database;
@@ -23,5 +27,15 @@ public class MkpElideConfiguration extends Configuration {
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
         this.database = dataSourceFactory;
+    }
+
+    @JsonProperty("deadlineThreshold")
+    public int getDeadlineThreshold() {
+        return deadlineThreshold;
+    }
+
+    @JsonProperty("deadlineThreshold")
+    public void setDeadlineThreshold(int deadlineThreshold) {
+        this.deadlineThreshold = deadlineThreshold;
     }
 }

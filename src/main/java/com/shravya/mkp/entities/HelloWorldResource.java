@@ -142,6 +142,38 @@ public class HelloWorldResource {
         return projects;
     }
 
+    @Path("/testProjectCollector")
+    @GET
+    @Timed
+    public Collection<Long> testProjectCollector(@QueryParam("threshold") long threshold) {
+        ProjectCollector projectCollector = new ProjectCollector(sessionFactory);
 
+        List<Project> projects = projectCollector.getProjectsWithDeadlineUnder(threshold);
+
+        List<Long> projectIds = new ArrayList<>();
+        for(Project project : projects) {
+            projectIds.add(project.getId());
+        }
+
+        return projectIds;
+    }
+
+    @Path("/testDeadlineProcessor")
+    @GET
+    @Timed
+    public Collection<Long> testDeadlineProcessor(@QueryParam("threshold") long threshold) {
+
+        ProjectCollector projectCollector = new ProjectCollector(sessionFactory);
+        List<Project> projects = projectCollector.getProjectsWithDeadlineUnder(threshold);
+
+        (new Thread(new DeadlineProcessor(sessionFactory, projects))).start();
+
+        List<Long> projectIds = new ArrayList<>();
+        for(Project project : projects) {
+            projectIds.add(project.getId());
+        }
+
+        return projectIds;
+    }
 }
 

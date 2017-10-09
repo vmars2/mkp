@@ -7,6 +7,7 @@ import com.yahoo.elide.annotation.OnUpdatePreCommit;
 import com.yahoo.elide.annotation.SharePermission;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,6 +37,7 @@ public class Project {
     private Status status = Status.OPEN;
     private Seller seller;
     private Collection<Bid> bids;
+    private long dateOfCreation;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,7 +98,7 @@ public class Project {
         this.seller = seller;
     }
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     public Collection<Bid> getBids() {
         return bids;
     }
@@ -113,6 +115,15 @@ public class Project {
     }
 
     public void setBestBid(Long bestBid) {}
+
+    @GeneratedValue
+    public long getDateOfCreation() {
+        return dateOfCreation;
+    }
+
+    public void setDateOfCreation(long dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
+    }
 
     @OnUpdatePreCommit
     public void OnUpdatePreCommit() {
@@ -147,7 +158,7 @@ public class Project {
         }
     }
 
-    private enum Status {
+    public enum Status {
         OPEN,
         CLOSED
     }
