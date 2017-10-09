@@ -1,5 +1,6 @@
-package com.shravya.mkp.entities;
+package com.shravya.mkp.deadline.processor;
 
+import com.shravya.mkp.entities.Project;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +15,14 @@ public class DeadlineProcessorOrchestrator implements Runnable {
 
     private SessionFactory sessionFactory;
     private int deadlineThreshold;  //In minutes
-    private ProjectCollector projectCollector;
+    private ProjectAggregator projectAggregator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeadlineProcessorOrchestrator.class);
 
     public DeadlineProcessorOrchestrator(SessionFactory sessionFactory, int deadlineThreshold) {
         this.sessionFactory = sessionFactory;
         this.deadlineThreshold = deadlineThreshold;
-        this.projectCollector = new ProjectCollector(sessionFactory);
+        this.projectAggregator = new ProjectAggregator(sessionFactory);
     }
 
     public void run() {
@@ -30,7 +31,7 @@ public class DeadlineProcessorOrchestrator implements Runnable {
             long now = Instant.now().getEpochSecond();
             long threshold = now;
 
-            List<Project> projects = projectCollector.getProjectsWithDeadlineUnder(threshold);
+            List<Project> projects = projectAggregator.getProjectsWithDeadlineWithinThreshold(threshold);
             if(projects.isEmpty()) {
                 LOGGER.info("No projects found with deadline within: " + threshold);
             } else {

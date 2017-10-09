@@ -1,5 +1,6 @@
-package com.shravya.mkp.entities;
+package com.shravya.mkp.deadline.processor;
 
+import com.shravya.mkp.entities.Project;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,15 +12,15 @@ import java.util.List;
 /**
  * Created by syakkali on 08/10/17.
  */
-public class ProjectCollector {
+public class ProjectAggregator {
 
     private SessionFactory sessionFactory;
 
-    public ProjectCollector(SessionFactory sessionFactory) {
+    public ProjectAggregator(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<Project> getProjectsWithDeadlineUnder(long threshold) {
+    public List<Project> getProjectsWithDeadlineWithinThreshold(long threshold) {
 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();

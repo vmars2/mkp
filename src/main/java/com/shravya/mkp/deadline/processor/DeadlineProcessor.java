@@ -1,5 +1,7 @@
-package com.shravya.mkp.entities;
+package com.shravya.mkp.deadline.processor;
 
+import com.shravya.mkp.entities.Bid;
+import com.shravya.mkp.entities.Project;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

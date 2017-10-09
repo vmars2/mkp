@@ -2,12 +2,11 @@ package com.shravya.mkp.application;
 
 import com.shravya.mkp.entities.Bid;
 import com.shravya.mkp.entities.Buyer;
-import com.shravya.mkp.entities.DeadlineProcessorOrchestrator;
+import com.shravya.mkp.deadline.processor.DeadlineProcessorOrchestrator;
 import com.shravya.mkp.entities.HelloWorldResource;
 import com.shravya.mkp.entities.Seller;
 import com.shravya.mkp.entities.Project;
 import com.yahoo.elide.contrib.dropwizard.elide.ElideBundle;
-import com.yahoo.elide.core.filter.dialect.JoinFilterDialect;
 import com.yahoo.elide.resources.JsonApiEndpoint;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;

@@ -1,6 +1,8 @@
 package com.shravya.mkp.entities;
 
 import com.codahale.metrics.annotation.Timed;
+import com.shravya.mkp.deadline.processor.DeadlineProcessor;
+import com.shravya.mkp.deadline.processor.ProjectAggregator;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -146,9 +148,9 @@ public class HelloWorldResource {
     @GET
     @Timed
     public Collection<Long> testProjectCollector(@QueryParam("threshold") long threshold) {
-        ProjectCollector projectCollector = new ProjectCollector(sessionFactory);
+        ProjectAggregator projectAggregator = new ProjectAggregator(sessionFactory);
 
-        List<Project> projects = projectCollector.getProjectsWithDeadlineUnder(threshold);
+        List<Project> projects = projectAggregator.getProjectsWithDeadlineWithinThreshold(threshold);
 
         List<Long> projectIds = new ArrayList<>();
         for(Project project : projects) {
@@ -163,8 +165,8 @@ public class HelloWorldResource {
     @Timed
     public Collection<Long> testDeadlineProcessor(@QueryParam("threshold") long threshold) {
 
-        ProjectCollector projectCollector = new ProjectCollector(sessionFactory);
-        List<Project> projects = projectCollector.getProjectsWithDeadlineUnder(threshold);
+        ProjectAggregator projectAggregator = new ProjectAggregator(sessionFactory);
+        List<Project> projects = projectAggregator.getProjectsWithDeadlineWithinThreshold(threshold);
 
         (new Thread(new DeadlineProcessor(sessionFactory, projects))).start();
 
