@@ -3,7 +3,6 @@ package com.shravya.mkp.application;
 import com.shravya.mkp.entities.Bid;
 import com.shravya.mkp.entities.Buyer;
 import com.shravya.mkp.deadline.processor.DeadlineProcessorOrchestrator;
-import com.shravya.mkp.entities.HelloWorldResource;
 import com.shravya.mkp.entities.Seller;
 import com.shravya.mkp.entities.Project;
 import com.yahoo.elide.contrib.dropwizard.elide.ElideBundle;
@@ -48,8 +47,6 @@ public class MkpElideApplication extends Application<MkpElideConfiguration> {
         final PooledDataSourceFactory dbConfig = config.getDataSourceFactory();
         SessionFactory sessionFactory = elideBundle.getSessionFactoryFactory().build(elideBundle, environment
                 , dbConfig, elideBundle.getEntities());
-
-        environment.jersey().register(new HelloWorldResource(sessionFactory));
 
         DeadlineProcessorOrchestrator deadlineProcessorOrchestrator = new DeadlineProcessorOrchestrator(sessionFactory,
                 config.getDeadlineThreshold());
