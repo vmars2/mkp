@@ -14,6 +14,9 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.hibernate.SessionFactory;
 
+/**
+ * The root application.
+ */
 public class MkpElideApplication extends Application<MkpElideConfiguration> {
 
     private final String name = "mkp-elide-app";

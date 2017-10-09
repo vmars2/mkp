@@ -32,8 +32,7 @@ public class Project {
     private long id;
     private String name;
     private String description;
-    private long deadline; // Time is in epoch
-    private String tags;
+    private long deadline;          // Time is seconds from epoch
     private Status status = Status.OPEN;
     private Seller seller;
     private Collection<Bid> bids;
@@ -73,14 +72,6 @@ public class Project {
         this.deadline = deadline;
     }
 
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
     public Status getStatus() {
         return status;
     }
@@ -114,7 +105,7 @@ public class Project {
         return evaluateBestBid();
     }
 
-    public void setBestBid(Long bestBid) {}
+    public void setBestBid(Long bestBid) { }
 
     @GeneratedValue
     public long getDateOfCreation() {
@@ -126,7 +117,7 @@ public class Project {
     }
 
     @OnUpdatePreCommit
-    public void OnUpdatePreCommit() {
+    public void onUpdatePreCommit() {
         validateDeadline();
     }
 
@@ -138,12 +129,12 @@ public class Project {
     private Bid evaluateBestBid() {
         Bid bestBid = null;
         BigDecimal min = BigDecimal.valueOf(Integer.MAX_VALUE);
-        for(Bid bid: getBids()) {
-            if(bid.getTotalQuote().compareTo(min) < 0) {
+        for (Bid bid: getBids()) {
+            if (bid.getTotalQuote().compareTo(min) < 0) {
                 min = bid.getTotalQuote();
                 bestBid = bid;
-            } else if (bid.getTotalQuote().equals(min)){
-                if(bid.getDateOfCreation() < bestBid.getDateOfCreation()) {
+            } else if (bid.getTotalQuote().equals(min)) {
+                if (bid.getDateOfCreation() < bestBid.getDateOfCreation()) {
                     bestBid = bid;
                 }
             }
@@ -152,12 +143,21 @@ public class Project {
     }
 
     private void validateDeadline() {
+
+        int numOfDigits = String.valueOf(this.deadline).length();
+        if(numOfDigits > 10) {
+            throw new IllegalArgumentException("deadline has to be in seconds from epoch");
+        }
+
         long now = Instant.now().getEpochSecond();
         if (this.deadline <= now) {
             throw new IllegalArgumentException("deadline cannot be in the past");
         }
     }
 
+    /**
+     * The various possible Project status
+     */
     public enum Status {
         OPEN,
         CLOSED

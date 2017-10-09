@@ -42,7 +42,7 @@ curl -H'Content-Type: application/vnd.api+json; ext=jsonpatch' \
                 "attributes": {
                     "name": "project 1",
                     "description": "project 1 descr",
-                    "deadline" : 1507570707
+                    "deadline" : 1508002707
                 }
             }
         },
@@ -55,7 +55,7 @@ curl -H'Content-Type: application/vnd.api+json; ext=jsonpatch' \
                  "attributes": {
                      "name": "project 2",
                      "description": "project 2 descr",
-                     "deadline" : 1508331413
+                     "deadline" : 1508003707
                  }
              }
         }
@@ -103,7 +103,7 @@ curl -H'Content-Type: application/vnd.api+json; ext=jsonpatch' \
                 "attributes": {
                     "name": "project 3",
                     "description": "project 3 descr",
-                    "deadline" : 1508360213
+                    "deadline" : 1508002904
                 }
             }
         },
@@ -116,7 +116,7 @@ curl -H'Content-Type: application/vnd.api+json; ext=jsonpatch' \
                  "attributes": {
                      "name": "project 4",
                      "description": "project 4 descr",
-                     "deadline" : 1508367413
+                     "deadline" : 1508002984
                  }
              }
         }

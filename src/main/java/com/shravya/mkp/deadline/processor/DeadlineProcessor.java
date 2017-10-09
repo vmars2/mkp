@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by syakkali on 08/10/17.
+ * Processes the projects and bids whose deadline has been reached.
  */
 public class DeadlineProcessor implements Runnable {
 
@@ -31,8 +31,8 @@ public class DeadlineProcessor implements Runnable {
     public void run() {
         Collections.sort(projects, Comparator.comparing((Project project) -> project.getDeadline()));
 
-        while(!projects.isEmpty()) {
-            if(projects.get(0).getDeadline() <= Instant.now().getEpochSecond()) {
+        while (!projects.isEmpty()) {
+            if (projects.get(0).getDeadline() <= Instant.now().getEpochSecond()) {
                 Project project = projects.remove(0);
                 evaluateProject(project, sessionFactory);
                 LOGGER.info("Completed evaluation of project with id: " + project.getId());
@@ -41,26 +41,26 @@ public class DeadlineProcessor implements Runnable {
     }
 
     private void acceptBid(Bid bid, Session session) {
-        if(bid != null) {
+        if (bid != null) {
             Query q = session.createQuery("update Bid set status=1 where id=:i");
             q.setParameter("i", bid.getId());
 
             int status = q.executeUpdate();
 
-            if(status > 0) {
+            if (status > 0) {
                 LOGGER.info("Accepted bid with id: " + bid.getId());
             }
         }
     }
 
     private void rejectBid(Bid bid, Session session) {
-        if(bid != null) {
+        if (bid != null) {
             Query q = session.createQuery("update Bid set status=2 where id=:i");
             q.setParameter("i", bid.getId());
 
             int status = q.executeUpdate();
 
-            if(status > 0) {
+            if (status > 0) {
                 LOGGER.info("Rejected bid with id: " + bid.getId());
             }
         }
@@ -71,7 +71,7 @@ public class DeadlineProcessor implements Runnable {
         q.setParameter("i", project.getId());
 
         int status = q.executeUpdate();
-        if(status > 0) {
+        if (status > 0) {
             LOGGER.info("Closed project with id: " + project.getId());
         }
     }

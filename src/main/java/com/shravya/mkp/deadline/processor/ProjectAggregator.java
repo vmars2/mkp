@@ -10,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import java.util.List;
 
 /**
- * Created by syakkali on 08/10/17.
+ * Aggregates projects with deadline within a threshold
  */
 public class ProjectAggregator {
 
@@ -20,7 +20,7 @@ public class ProjectAggregator {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<Project> getProjectsWithDeadlineWithinThreshold(long threshold) {
+    public List<Project> getProjectsWithDeadlineWithinCutOff(long cutOff) {
 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -28,7 +28,7 @@ public class ProjectAggregator {
 
         try {
             Criteria criteria = session.createCriteria(Project.class);
-            criteria.add(Restrictions.le("deadline", threshold));
+            criteria.add(Restrictions.le("deadline", cutOff));
             criteria.add(Restrictions.eq("status", Project.Status.OPEN));
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             projects = criteria.list();

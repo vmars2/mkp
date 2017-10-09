@@ -1,5 +1,4 @@
-# Dropwizard Elide Example
-This example demonstrates how to use the dropwizard-elide bundle.
+# Marketplace BE CRAFT DEMO
 
 ## Usage
 

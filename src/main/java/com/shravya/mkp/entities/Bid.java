@@ -16,6 +16,9 @@ import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+/**
+ * The bid entity
+ */
 @Entity
 @Table(name = "bid")
 @SharePermission(expression = "Prefab.Role.All")
@@ -23,16 +26,13 @@ import java.time.Instant;
 public class Bid {
 
     private long id;
-    //@UpdatePermission(expression = "Prefab.Role.None")
     private BigDecimal totalQuote;  // The totalQuote is in USD
-    //@UpdatePermission(expression = "Prefab.Role.None")
     private BigDecimal hourlyQuote; // the hourlyQuote is in USD
-    //@UpdatePermission(expression = "Prefab.Role.None")
-    private int noOfHrs;           // noOfHrs is in hrs
+    private int noOfHrs;            // noOfHrs is in hrs
     private Status status = Status.OPEN;
     private Project project;
     private Buyer buyer;
-    private long dateOfCreation;
+    private long dateOfCreation;    // seconds from epoch
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,7 +103,7 @@ public class Bid {
         this.dateOfCreation = dateOfCreation;
     }
 
-    @ValidationMethod(message="The quote setting is not valid")
+    @ValidationMethod(message = "The quote setting is not valid")
     @Transient
     public boolean isQuoteValid() {
         return (totalQuote != null || (hourlyQuote != null && noOfHrs > 0));
@@ -121,11 +121,14 @@ public class Bid {
     }
 
     public void updateFinalTotalQuote() {
-        if(this.hourlyQuote != null) {
+        if (this.hourlyQuote != null) {
             this.totalQuote =  hourlyQuote.multiply(new BigDecimal(noOfHrs));
         }
     }
 
+    /**
+     * The various possible Bid status
+     */
     public enum Status {
         OPEN,
         ACCEPTED,
