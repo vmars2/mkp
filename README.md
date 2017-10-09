@@ -1,5 +1,13 @@
 # Marketplace BE CRAFT DEMO
 
+Application Stack:
+- Jetty for server
+- Jersey for rest framework
+- Hibernate for ORM
+
+This application is powered by [Elide](http://elide.io/).
+The rest urls are in accordance to the [JSON-API](http://jsonapi.org/) specification.
+
 ## Usage
 
 1. Install and start a MySQL server
@@ -12,9 +20,12 @@
 
         mysql> grant all on mkp.* to 'mkp'@'localhost' identified by 'mkp123';
 
-4. Launch the mkp webservice
-
+4. Build the application
+    
         mvn install
+
+
+5. Launch the mkp webservice (from any ide) 
         
         run the main method with 2 arguments: ```server example.yml``` 
         
@@ -25,7 +36,7 @@
 
    The application starts listening at port {port}. This port number is specified in [configuration file](https://github.com/yahoo/elide/blob/master/elide-example/dropwizard-elide-example/example.yml). Let's take {port}=4080 for an example.
 
-5. Create an seller
+6. Create an seller
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' --data '{
           "data": {
@@ -40,7 +51,7 @@
         }' -X POST http://localhost:4080/seller
 
         
-6. Create a project
+7. Create a project
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' --data '{
           "data": {
@@ -54,7 +65,7 @@
           }
         }' -X POST http://localhost:4080/project
         
-7. Associate the seller and project
+8. Associate the seller and project
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' --data '{
           "data": {
@@ -64,7 +75,7 @@
         }' -X PATCH http://localhost:4080/seller/1/relationships/projects
 
  
-8. Create a buyer
+9. Create a buyer
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' --data '{
           "data": {
@@ -78,7 +89,7 @@
           }
         }' -X POST http://localhost:4080/buyer
 
-9. Create a bid
+10. Create a bid
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' --data '{
           "data": {
@@ -90,7 +101,7 @@
           }
         }' -X POST http://localhost:4080/bid
 
-10. Associate the buyer and bid
+11. Associate the buyer and bid
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' --data '{
           "data": {
@@ -99,7 +110,7 @@
           }
         }' -X PATCH http://localhost:4080/buyer/1/relationships/bids
 
-11. Associate the project and bid
+12. Associate the project and bid
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' --data '{
           "data": {
@@ -108,9 +119,9 @@
           }
         }' -X PATCH http://localhost:4080/project/1/relationships/bids
 
-8. Get projects
+13. Get projects
 
         $ curl -H'Content-Type: application/vnd.api+json' -H'Accept: application/vnd.api+json' http://localhost:4080/project/
 
-You can also load some pre-configured authors and books using `load_mkp.sh` in `/scripts`
+You can also load some pre-configured buyers, sellers, projects and bids using `load_mkp.sh` in `/scripts`
 
